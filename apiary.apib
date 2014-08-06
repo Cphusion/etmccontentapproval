@@ -1,0 +1,211 @@
+FORMAT: 1A
+HOST: http://www.google.com
+
+# ETMC Content Approval
+Content Approval API is a ...
+
+# Group Content Approvals resources
+Approvals related resources of the **Content Approvals API**
+
+## Approvals Collection [/approvals{?campaignDefinitionId,approvalItemType,page,pageSize,orderBy,filter}]
+### List all Approval objects [GET]
+Collection of Approval objects with a given **campaignDefinitionId** and **approvalItemType**.
+
++ Parameters
+    + campaignDefinitionId (optional, number) ... use to return all approval items for a specific Campaign.
+    + approvalItemType (optional, string) ... use to return only approval items of a particular type.
+    + filter (optional, string) ... **TODO** how is this used? Is this how we would support the Search feature that is part of the UI design?
+    + orderBy (optional, string) ... keyword used to sort the result-set by one or more columns. It can contain any of the following fields (case-sensitive): `Name`, `WorkflowStatus`
+    + pageSize (optional, number - default = 25) ...  number of records to return.
+    + page (optional, number) ... page to return, one based.
+    
++ Response 200 (application/json)
+
+        [{
+            "_links": {
+                "self": { "href": "/approvals?page=2&pageSize=3" },
+                "next": { "href": "/approvals?page=3&pageSize=3" },
+                "prev": { "href": "/approvals?page=1&pageSize=3" }
+            },        
+            "count": 2,
+            "page": 1,
+            "pageSize": 10,
+            "entries": [
+                {
+                  "approvalItemId": 1,
+                  "objectType": "ASSET",
+                  "objectId": "8059",
+                  "approvalItemUri": "https://exacttargetapis.com/asset-internal/v1/content/assets/8059",
+                  "name":"Standard Email Banner",
+                  "description":"The standard email banner for summer 2015",
+                  "campaignDefinitionId":123456,
+                  "workflowItemId":123,
+                  "workflowState" : "Draft",
+                  "objectAbilities" : ["Editable","Associatable"],
+                  "createdDate": "2014-05-01T16:20:02",
+                  "modifiedDate": "2014-05-01T16:26:31",
+                  "commentCounts" : {
+                    "total" : 0,
+                    "addressed" : 0,
+                    "completed" : 0}
+                },
+                {
+                  "approvalItemId": 2,
+                  "objectType": "ASSET",
+                  "objectId": "8063",
+                  "approvalItemUri": "https://exacttargetapis.com/asset-internal/v1/content/assets/8063",
+                  "name":"Some Image",
+                  "description":"The some image description",
+                  "campaignDefinitionID":123456,
+                  "workflowItemID":124,
+                  "workflowState" : "Submitted",
+                  "objectAbilities" : ["Associatable"],
+                  createdDate": "2014-05-01T16:20:02",
+                  "modifiedDate": "2014-05-01T16:26:31",
+                  "commentCounts" : {
+                    "total" : 5
+                    "addressed" : 2
+                    "completed" : 3
+                }]
+        }]
+        
+
+## Approval [/approvals/{objectType}/{objectId}]
+### Get an Approval by objectId [GET]
+Gets a single Approval with the given **partnerApiObjectType** name and **objectId**.
+
+**TODO** I'm not certain at all that this is a good url template. We could add additional optional parameters on the get collection route, but the intent is to return a single Approval. Looking for ideas here. This will be required for the UI to know the approval status of, say, an email, so we can determine whether or not to enable the Send button. This is not needed for our immediate demo goals.
+
++ Response 200 (application/json)
+
+        
+                {
+                  "approvalItemId": 1,
+                  "objectType": "ASSET",
+                  "objectId": "8059",
+                  "approvalItemUri": "https://exacttargetapis.com/asset-internal/v1/content/assets/8059",
+                  "name":"Standard Email Banner",
+                  "description":"The standard email banner for summer 2015",
+                  "campaignDefinitionId":123456,
+                  "workflowItemId":123,
+                  "workflowState" : "Draft",
+                  "objectAbilities" : ["Editable","Associatable"],
+                  "createdDate": "2014-05-01T16:20:02",
+                  "modifiedDate": "2014-05-01T16:26:31",
+                  "commentCounts" : {
+                    "total" : 0,
+                    "addressed" : 0,
+                    "completed" : 0}
+                }
+                
+## Approval [/approvals]
+### Create an Approval object [POST]
+A complete Approval object with all its details
+
++ Request (application/json)
+
+                {
+                  "objectType": "ASSET",
+                  "objectId": "8059",
+                  "approvalItemUri": "https://exacttargetapis.com/asset-internal/v1/content/assets/8059",
+                  "name":"Standard Email Banner",
+                  "description":"The standard email banner for summer 2015",
+                  "campaignDefinitionId":123456,
+                  
+                }
+
++ Response 201 (application/json)
+
+                {
+                  "approvalItemId": 1,
+                  "objectType": "ASSET",
+                  "objectId": "8059",
+                  "approvalItemUri": "https://exacttargetapis.com/asset-internal/v1/content/assets/8059",
+                  "name":"Standard Email Banner",
+                  "description":"The standard email banner for summer 2015",
+                  "campaignDefinitionId":123456,
+                  "workflowItemId":123,
+                  "workflowState" : "Draft",
+                  "objectAbilities" : ["Editable","Associatable"],
+                  "createdDate": "2014-05-01T16:20:02",
+                  "modifiedDate": "2014-05-01T16:26:31",
+                  "commentCounts" : {
+                    "total" : 0,
+                    "addressed" : 0,
+                    "completed" : 0}
+                }
+
+## Approval [/approvals/{id}]
+
++ Parameters
+    + id (required, number, `1`) ... Numeric `id` of the Approval object to perform action with. Has example value.
+
+### Update an Approval object [PATCH]
+
+Update an Approval object. Partial updates are supported.
+
+
++ Request (application/json)
+    + Body
+    
+            {
+                  "Name":"Updated Email Banner",
+                  "Description":"Updated approval item description",
+            }
+
++ Response 200
+    + Body
+
+            {
+                  "approvalItemId": 1,
+                  "objectType": "ASSET",
+                  "objectId": "8059",
+                  "approvalItemUri": "https://exacttargetapis.com/asset-internal/v1/content/assets/8059",
+                  "name":"Updated Email Banner",
+                  "description":"Updated approval item description",
+                  "campaignDefinitionId":123456,
+                  "workflowItemId":123,
+                  "workflowState" : "Draft",
+                  "objectAbilities" : ["Editable","Associatable"],
+                  "createdDate": "2014-05-01T16:20:02",
+                  "modifiedDate": "2014-05-02T10:45:19",
+                  "commentCounts" : {
+                    "total" : 0,
+                    "addressed" : 0,
+                    "completed" : 0}
+            }
+
+### Retrieve a Approval object [GET]
+Get an Approval object by id.
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                  "approvalItemId": 1,
+                  "objectType": "ASSET",
+                  "objectId": "8059",
+                  "approvalItemUri": "https://exacttargetapis.com/asset-internal/v1/content/assets/8059",
+                  "name":"Standard Email Banner",
+                  "description":"The standard email banner for summer 2015",
+                  "campaignDefinitionId":123456,
+                  "workflowItemId":123,
+                  "workflowState" : "Draft",
+                  "objectAbilities" : ["Editable","Associatable"],
+                  "createdDate": "2014-05-01T16:20:02",
+                  "modifiedDate": "2014-05-01T16:26:31",
+                  "commentCounts" : {
+                    "total" : 0,
+                    "addressed" : 0,
+                    "completed" : 0}
+            }
+
+### Remove an Approval [DELETE]
+Sets an Approval object to Inactive
+
++ Response 200 (application/json)
+    + Body
+    
+            {
+                "message": "Approval item 1 successfully deleted."
+            }
